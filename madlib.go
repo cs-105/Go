@@ -7,8 +7,8 @@
 
 func main(){
   /*
-  output welcome message to user
-  get user input for a topic
+  output welcome message to user //MICHAEL
+  get user input for a topic //MICHAEL
   pass user input to findText function
   call textParser on text to get words to replace
   for each word to replace, output part of speech to user and call inputvalidation
@@ -20,11 +20,13 @@ func main(){
 
 
 //findText function should pass the topic in string form and return a relevant body of text found on the internet. This text is then parsed by textParser
+//ETHAN
 func findText(){
 
 }
 
-//textParser should return the location and type of words that are being replaced
+//textParser should return the location and type of words that are being replaced 
+//TALIA
 func textParser(){
 
 }
