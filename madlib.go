@@ -5,8 +5,8 @@
 
 //global variable text
 
-/*
-main
+func main(){
+  /*
   output welcome message to user
   get user input for a topic
   pass user input to findText function
@@ -15,15 +15,27 @@ main
   when all words have been replace, replace words from og text with user inputted words
   print out body of text
   ask user if they want to repeat or quit
-*/
+  */
+}
 
 
 //findText function should pass the topic in string form and return a relevant body of text found on the internet. This text is then parsed by textParser
+func findText(){
+
+}
 
 //textParser should return the location and type of words that are being replaced
+func textParser(){
 
-//inputValue should prevent users from inputting a word of different type than the word that was removed
+}
+
+//inputValidation should prevent users from inputting a word of different type than the word that was removed
+func inputValidation(){
+
+}
 
 //insertWords should take the validated user inputs and pass them back into the body of text
+func insertWords(){
 
+}
 
