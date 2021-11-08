@@ -19,19 +19,9 @@ func ReadHTML(str string) {
 		e.Request.Visit(e.Attr("href"))
 	}) */
 
-	c.OnHTML("head", func(e *colly.HTMLElement) {
+	c.OnHTML("body", func(e *colly.HTMLElement) {
 		text := e.Text
 		fmt.Print(text)
-	})
-
-	c.OnHTML("section", func(e *colly.HTMLElement) {
-		text := e.Text
-		fmt.Print(text)
-	})
-
-	c.OnHTML("p", func(e *colly.HTMLElement) {
-		text := e.Text
-		fmt.Println(text)
 	})
 
 	c.OnRequest(func(response *colly.Request) {
