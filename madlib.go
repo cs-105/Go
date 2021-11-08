@@ -71,6 +71,16 @@ func textParser() {
 	}
 
 	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD", "VBP", "VBZ"}
+	posConverter := make(map[string]string)
+	posConverter["JJ"] = "adjective"
+	posConverter["NN"] = "noun"
+	posConverter["NNP"] = "proper noun"
+	posConverter["NNS"] = "plural noun"
+	posConverter["RB"] = "adverb"
+	posConverter["VB"] = "verb"
+	posConverter["VBD"] = "past tense verb"
+	posConverter["VBP"] = "verb non 3rd person singular present"
+	posConverter["VBZ"] = "verb 3rd person singular present"
 
 	// Iterate over the doc's tokens:
 	// for each sentence, collect all replaceable tokens
