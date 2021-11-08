@@ -6,9 +6,13 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func ReadHTML(c *colly.Collector) {
-	
-	c.MaxDepth(1)
+func ReadHTML(str string) {
+	c := colly.NewCollector(
+		colly.UserAgent("MadLibs"),
+		colly.MaxDepth(1),
+		colly.AllowURLRevisit(),
+		colly.Async(true),
+	)
 
 	// Find and visit all links
 	/*c.OnHTML("a[href]", func(e *colly.HTMLElement) {
