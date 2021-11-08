@@ -1,26 +1,22 @@
 package main
 
-import (
-	"fmt"
-	"github.com/gocolly/colly"
-)
-
+/*
 func main() {
 	c := colly.NewCollector(
 		colly.MaxDepth(1),
-		)
+	)
 
 	// Find and visit all links
 	/*c.OnHTML("a[href]", func(e *colly.HTMLElement) {
 		e.Request.Visit(e.Attr("href"))
-	}) */
+	}) */ /*
 
-	c.OnHTML("head", func( e *colly.HTMLElement) {
+	c.OnHTML("head", func(e *colly.HTMLElement) {
 		text := e.Text
 		fmt.Print(text)
 	})
 
-	c.OnHTML("section", func( e *colly.HTMLElement) {
+	c.OnHTML("section", func(e *colly.HTMLElement) {
 		text := e.Text
 		fmt.Print(text)
 	})
@@ -41,3 +37,4 @@ func main() {
 
 	c.Visit("https://noah-de.github.io")
 }
+*/
