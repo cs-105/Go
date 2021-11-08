@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-
 	g "github.com/serpapi/google-search-results-golang"
 )
 
