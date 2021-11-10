@@ -32,8 +32,26 @@ func containsInt(s []int, str int) bool {
 }
 
 //helper method creates a map to convert between symbol and part of speech
-func makePosMap() map[string]string {
+func makePosToShort() map[string]string {
 	posConverter := make(map[string]string)
+
+	posConverter["adjective"] = "JJ"
+	posConverter["noun"] = "NN"
+	posConverter["proper noun"] = "NNP"
+	posConverter["plural noun"] = "NNS"
+	posConverter["adverb"] = "RB"
+	posConverter["verb"] = "VB"
+	posConverter["past tense verb"] = "VBD"
+	posConverter["verb non 3rd person singular present"] = "VBP"
+	posConverter["verb 3rd person singular present"] = "VBZ"
+
+	return posConverter
+}
+
+//helper method creates a map to convert between symbol and part of speech
+func makePosToLong() map[string]string {
+	posConverter := make(map[string]string)
+
 	posConverter["JJ"] = "adjective"
 	posConverter["NN"] = "noun"
 	posConverter["NNP"] = "proper noun"
@@ -48,6 +66,7 @@ func makePosMap() map[string]string {
 }
 
 //iterates over document
+//NOTE TO SELF: YOU CAN ITERATE BY SENTENCE
 func parseText() {
 
 	// Create a new document with the default configuration:
@@ -56,38 +75,36 @@ func parseText() {
 		log.Fatal(err)
 	}
 
-	//prepare iterating variables
 	rand.Seed(time.Now().UnixNano())
-	var sentence []string
 	var startingIndex = 0
-	var indices []int
-	var index int = -1
 	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD", "VBP", "VBZ"}
 
-	for _, tok := range doc.Tokens() {
-		//fmt.Println(tok.Text, tok.Tag)
-		index++
+	// Iterate over the doc's sentences:
+	for _, sent := range doc.Sentences() {
 
-		if tok.Tag == "." || tok.Text == "!" || tok.Text == "" {
+		var oneOrTwo = rand.Intn(2) + 1
+		var numFound = 0
+		var attempts = 0
 
-			//randomly choose either one or two words to be chosen from sentence
-			var oneOrTwo = rand.Intn(2) + 1
-			for i := 0; i < oneOrTwo; i++ {
-				var length = len(sentence)
-				var rando = rand.Intn(length)
-				if !containsInt(indicesToReplace, startingIndex+indices[rando]) {
-					indicesToReplace = append(indicesToReplace, startingIndex+indices[rando])
-					posToReplace = append(posToReplace, sentence[rando])
-				}
+		doc2, err := prose.NewDocument(sent.Text)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for numFound != oneOrTwo && attempts < 5 {
+			var rando = rand.Intn(len(doc2.Tokens()))
+			var randoTok = doc2.Tokens()[rando]
+
+			if containsString(canBeReplaced, randoTok.Tag) && !containsInt(indicesToReplace, startingIndex+rando) {
+				indicesToReplace = append(indicesToReplace, startingIndex+rando)
+				posToReplace = append(posToReplace, posToLong[doc2.Tokens()[rando].Tag])
+				numFound = numFound + 1
+				attempts = attempts + 1
 			}
-			sentence = nil
-			startingIndex = index + 1
+
 		}
 
-		if containsString(canBeReplaced, tok.Tag) {
-			sentence = append(sentence, tok.Tag)
-			indices = append(indices, index)
-		}
+		startingIndex = startingIndex + len(doc2.Tokens())
 	}
 
 }
