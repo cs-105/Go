@@ -32,8 +32,36 @@ func containsInt(s []int, str int) bool {
 }
 
 //helper method creates a map to convert between symbol and part of speech
-func makePosMap() map[string]string {
+func makePosToShort() map[string]string {
 	posConverter := make(map[string]string)
+
+	/*posConverter["JJ"] = "adjective"
+	posConverter["NN"] = "noun"
+	posConverter["NNP"] = "proper noun"
+	posConverter["NNS"] = "plural noun"
+	posConverter["RB"] = "adverb"
+	posConverter["VB"] = "verb"
+	posConverter["VBD"] = "past tense verb"
+	posConverter["VBP"] = "verb non 3rd person singular present"
+	posConverter["VBZ"] = "verb 3rd person singular present"*/
+
+	posConverter["adjective"] = "JJ"
+	posConverter["noun"] = "NN"
+	posConverter["proper noun"] = "NNP"
+	posConverter["plural noun"] = "NNS"
+	posConverter["adverb"] = "RB"
+	posConverter["verb"] = "VB"
+	posConverter["past tense verb"] = "VBD"
+	posConverter["verb non 3rd person singular present"] = "VBP"
+	posConverter["verb 3rd person singular present"] = "VBZ"
+
+	return posConverter
+}
+
+//helper method creates a map to convert between symbol and part of speech
+func makePosToLong() map[string]string {
+	posConverter := make(map[string]string)
+
 	posConverter["JJ"] = "adjective"
 	posConverter["NN"] = "noun"
 	posConverter["NNP"] = "proper noun"
@@ -48,6 +76,7 @@ func makePosMap() map[string]string {
 }
 
 //iterates over document
+//NOTE TO SELF: YOU CAN ITERATE BY SENTENCE
 func parseText() {
 
 	// Create a new document with the default configuration:

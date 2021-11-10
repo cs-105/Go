@@ -6,9 +6,15 @@ import "fmt"
 var indicesToReplace []int
 var posToReplace []string
 var text string
+var posToLong map[string]string
+var posToShort map[string]string
 
 // main function
 func main() {
+
+	//populate maps
+	posToLong = makePosToLong()
+	posToShort = makePosToShort()
 
 	fmt.Println("Welcome to Interactive Madlibs!")
 
