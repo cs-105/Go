@@ -97,6 +97,7 @@ func parseText() {
 
 			if containsString(canBeReplaced, randoTok.Tag) && !containsInt(indicesToReplace, startingIndex+rando) {
 				indicesToReplace = append(indicesToReplace, startingIndex+rando)
+				wordsToReplace = append(wordsToReplace, doc2.Tokens()[rando].Text)
 				posToReplace = append(posToReplace, posToLong[doc2.Tokens()[rando].Tag])
 				numFound = numFound + 1
 				attempts = attempts + 1
