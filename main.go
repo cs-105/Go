@@ -1,11 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os/exec"
+)
 
 //global variables
 var indicesToReplace []int
 var posToReplace []string
 var wordsToReplace []string
+var userInputWords []string
 var text string
 var posToLong map[string]string
 var posToShort map[string]string
@@ -43,6 +48,11 @@ func main() {
 	fmt.Println(wordsToReplace)
 
 	insertWords()
+
+	cmd := exec.Command("espeak", text)
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
 
 }
 

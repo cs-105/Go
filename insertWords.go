@@ -16,7 +16,7 @@ func insertWords() {
 
 		var wordlen = len(wordsToReplace[pos])
 
-		text = text[0:index] + "OOOOO" + text[index+wordlen:]
+		text = text[0:index] + userInputWords[pos] + text[index+wordlen:]
 		pos++
 	}
 
