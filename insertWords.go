@@ -7,17 +7,16 @@ import (
 
 func insertWords() {
 
-	var pos = 0
-
 	var index int
 
-	for _, element := range wordsToReplace {
-		index = findWordLocation(element, indicesToReplace[pos])
+	for _, element := range holes {
+		index = findWordLocation(element.OldWord, element.Index)
 
-		var wordlen = len(wordsToReplace[pos])
+		var wordlen = len(element.OldWord)
 
-		text = text[0:index] + userInputWords[pos] + text[index+wordlen:]
-		pos++
+		fmt.Println(text)
+
+		text = text[0:index] + element.NewWord + text[index+wordlen:]
 	}
 
 	fmt.Println(text)
