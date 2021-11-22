@@ -9,8 +9,6 @@ import (
 	"gopkg.in/jdkato/prose.v2"
 )
 
-//iterates over document
-//NOTE TO SELF: YOU CAN ITERATE BY SENTENCE
 func parseText() {
 
 	// Create a new document with the default configuration:
@@ -39,7 +37,7 @@ func parseText() {
 			}
 		}
 
-		var twoOrThree = rand.Intn(2) + 2
+		var twoOrThree = rand.Intn(2) + 1
 		var numFound = 0
 		var alreadyFound []string
 

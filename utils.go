@@ -18,17 +18,6 @@ func containsString(s []string, str string) bool {
 	return false
 }
 
-//helper method to see if a list of ints contains an int
-/*func containsInt(s []int, str int) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-
-	return false
-}*/
-
 //helper method creates a map to convert between symbol and part of speech
 func makePosToShort() map[string]string {
 	posConverter := make(map[string]string)
