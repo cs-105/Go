@@ -5,22 +5,18 @@ import (
 	"strings"
 )
 
-func insertWords() {
-
-	var pos = 0
+func insertWords(newWords []string) {
 
 	var index int
 
-	for _, element := range wordsToReplace {
-		index = findWordLocation(element, indicesToReplace[pos])
-
-		var wordlen = len(wordsToReplace[pos])
-
-		text = text[0:index] + userInputWords[pos] + text[index+wordlen:]
-		pos++
+	var counter = 0
+	for _, element := range holes {
+		index = findWordLocation(element.OldWord, element.Index)
+		var wordlen = len(element.OldWord)
+		fmt.Println(newWords[counter])
+		text = text[0:index] + newWords[counter] + text[index+wordlen:]
+		counter++
 	}
-
-	fmt.Println(text)
 
 }
 
