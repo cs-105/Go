@@ -1,4 +1,4 @@
-package retriever
+package main
 
 import (
 	"strings"
@@ -7,10 +7,6 @@ import (
 )
 
 var book string
-
-func main() {
-	bookretriever("hamlet")
-}
 
 func bookretriever(searchTerm string) string {
 

@@ -1,4 +1,4 @@
-package retriever
+package main
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	g "github.com/serpapi/google-search-results-golang"
 )
 
-var text string
+var lyrics string
 
 func LyricRetriever(searchTerm string) string {
 	parameters := map[string]string{
@@ -22,6 +22,6 @@ func LyricRetriever(searchTerm string) string {
 		fmt.Println(err)
 	}
 	answerBox := results["answer_box"].(map[string]interface{})
-	text := answerBox["lyrics"].(string)
-	return text
+	lyrics := answerBox["lyrics"].(string)
+	return lyrics
 }
