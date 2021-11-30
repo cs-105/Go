@@ -1,4 +1,4 @@
-package retriever
+package main
 
 import (
 	"math/rand"
