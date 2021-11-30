@@ -1,39 +1,25 @@
-package main
+package retriever
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	g "github.com/serpapi/google-search-results-golang"
+	"strings"
 )
 
-func Scrape() {
-	api := "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320"
+var api = "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320"
 
-	fmt.Println("What kind of articles would you like to madlib on?")
-	reader := bufio.NewReader(os.Stdin)
-	searchTerm, _ := reader.ReadString('\n')
+func main() {
+	Scrape("songs", "Bonfire")
+}
 
-	parameters := map[string]string{
-		"engine":  "google",
-		"q":       searchTerm,
-		"output":  "html",
-		"api_key": "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320",
+func Scrape(topic, searchTerm string) {
+	topic = strings.ToLower(topic)
+
+	switch topic {
+	case "wiki":
+		WikiRetriever(searchTerm)
+	case "news":
+		NewsRetriever(searchTerm)
+	case "songs":
+		LyricRetriever(searchTerm)
 	}
 
-	query := g.NewGoogleSearch(parameters, api)
-	results, err := query.GetJSON()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	organicresults := results["organic_results"].([]interface{})
-	page := organicresults[1].(map[string]interface{})
-	url := fmt.Sprintf("%v", page["link"])
-	ReadHTML(url)
-	/* var pageReturned map[string]interface{}
-	for _, v := range organicresults {
-		pageReturned = v.(map[string]interface{})
-		fmt.Printf("%v: %v\n", pageReturned["title"], pageReturned["link"])
-	} */
 }

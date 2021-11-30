@@ -1,23 +1,22 @@
-package main
+package retriever
 
 import (
-	"fmt"
 	"math/rand"
 	"strings"
 
 	"github.com/gocolly/colly"
 )
 
-var coll *colly.Collector
-
-func main() {
-	NewsRetriever("Joe Biden")
-}
+var coll = colly.NewCollector(
+	colly.UserAgent("MadLibs"),
+	colly.MaxDepth(1),
+	colly.AllowURLRevisit(),
+)
+var newsLinks = make(map[string]int)
 
 func NewsRetriever(searchTerm string) string {
-	var links map[string]int
-	linkRetriever(searchTerm, links)
-	link := linkFollower(links)
+	linkRetriever(searchTerm, newsLinks)
+	link := linkFollower(newsLinks)
 	text := pageReader(link)
 	return text
 }
@@ -27,51 +26,39 @@ func linkRetriever(searchTerm string, links map[string]int) map[string]int {
 		colly.UserAgent("MadLibs"),
 		colly.MaxDepth(1),
 		colly.AllowURLRevisit(),
-		colly.Async(true),
 	)
 
-	coll = c.Clone()
+	news := c.Clone()
+	linkCounter := 0
 
-	terms := strings.Split(searchTerm, " ")
-	stringTerms := strings.Join(terms, "+")
-
+	search := strings.Split(searchTerm, " ")
+	query := strings.Join(search, "+")
 	// Find and visit all links
-	/*c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-		e.Request.Visit(e.Attr("href"))
-	}) */
-	linkcounter := 0
 
-	c.OnHTML(".news-item.center", func(e *colly.HTMLElement) {
-		linkcounter++
-		link := e.ChildText(".news-item a")
-		links[link] = linkcounter
+	c.OnHTML(".views-row.views-row-1.views-row-odd.views-row-first.search-value", func(e *colly.HTMLElement) {
+		link := e.ChildAttr("a", "href")
+		news.Visit("https://www.allsides.com" + link)
 	})
 
-	c.OnHTML(".news-item.right", func(e *colly.HTMLElement) {
-		fmt.Println(e.DOM.Children().Text())
-		linkcounter++
-		link := e.ChildText(".news-item a")
-		links[link] = linkcounter
+	news.OnHTML(".news-item.center", func(e *colly.HTMLElement) {
+		linkCounter++
+		link := e.ChildAttr("a", "href")
+		links[link] = linkCounter
 	})
 
-	c.OnHTML(".news-item.left", func(e *colly.HTMLElement) {
-		linkcounter++
-		link := e.ChildText(".news-item a")
-		links[link] = linkcounter
+	news.OnHTML(".news-item.right", func(e *colly.HTMLElement) {
+		linkCounter++
+		link := e.ChildAttr("a", "href")
+		links[link] = linkCounter
 	})
 
-	/*
-		c.OnRequest(func(response *colly.Request) {
-			fmt.Println("Visiting", response.URL)
-		})
+	news.OnHTML(".news-item.right", func(e *colly.HTMLElement) {
+		linkCounter++
+		link := e.ChildAttr("a", "href")
+		links[link] = linkCounter
+	})
 
-		c.OnResponse(func(response *colly.Response) {
-			myString := string(response.Body[:])
-			fmt.Println(myString)
-		})
-	*/
-
-	c.Visit("https://www.allsides.com/search?search=" + stringTerms)
+	c.Visit("https://www.allsides.com/search?search=" + query)
 
 	return links
 }
@@ -91,7 +78,7 @@ func linkFollower(links map[string]int) string {
 
 func pageReader(link string) string {
 	var text string
-	coll.OnHTML("div.article-description", func(e *colly.HTMLElement) {
+	coll.OnHTML(".article-description", func(e *colly.HTMLElement) {
 		text = e.ChildText("p")
 	})
 
