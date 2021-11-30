@@ -17,9 +17,8 @@ func main() {
 	posToLong = makePosToLong()
 	posToShort = makePosToShort()
 
-	func main() {
-		asciiArt :=
-			`
+	asciiArt :=
+		`
 			  /\
 			 /**\
 			/****\   /\
@@ -30,7 +29,7 @@ func main() {
 	   /  /      \/  \/\   \  /      \    /   /    \
 	__/__/_______/___/__\___\__________________________________________________
 	`
-		fmt.Println(asciiArt)
+	fmt.Println(asciiArt)
 
 	fmt.Println("Welcome to Interactive Madlibs!")
 
