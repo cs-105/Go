@@ -9,6 +9,7 @@ import (
 var lyrics string
 
 func LyricRetriever(searchTerm string) string {
+	api := "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320"
 	parameters := map[string]string{
 		"engine":  "google",
 		"q":       searchTerm + " song lyrics",
