@@ -8,10 +8,6 @@ import (
 
 var book string
 
-func main() {
-	bookretriever("hamlet")
-}
-
 func bookretriever(searchTerm string) string {
 
 	split := strings.Split(searchTerm, " ")
