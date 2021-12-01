@@ -7,6 +7,7 @@ import (
 //global variables
 var holes []Hole
 var text string
+var originalText string
 var posToLong map[string]string
 var posToShort map[string]string
 
@@ -75,6 +76,7 @@ func main() {
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
 		text = Scrape(topic, searchTerm)
+		originalText = text
 		//fmt.Println(Scrape(topic, searchTerm))
 
 		//this is just example text until we implement a method that finds text for us
@@ -92,11 +94,19 @@ func main() {
 
 		insertWords(newWords)
 
+		fmt.Println()
 		fmt.Println(text)
 
+		fmt.Println()
+		fmt.Println("Would you like to see the original text? Enter y or n")
+		var seeOriginal string
+		fmt.Scanln(&seeOriginal)
+		if seeOriginal == "y" {
+			fmt.Println(originalText)
+		}
+
+		fmt.Println()
 		fmt.Println("Enter p to play again or enter q to quit")
 		fmt.Scanln(&playAgain)
 	}
 }
-
-//findText function should pass the topic in string form and return a relevant body of text found on the internet. This text is then parsed by textParser
