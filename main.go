@@ -75,8 +75,9 @@ func main() {
 
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
-		text = Scrape(topic, searchTerm)
-		originalText = text
+		c := make(chan string)
+		go Scrape(c, topic, searchTerm)
+		originalText = <-c
 		//fmt.Println(Scrape(topic, searchTerm))
 
 		//this is just example text until we implement a method that finds text for us
