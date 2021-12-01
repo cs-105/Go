@@ -2,9 +2,8 @@ package main
 
 import (
 	"log"
-
-	"math/rand"
-	"time"
+	"strings"
+	"sync"
 
 	"gopkg.in/jdkato/prose.v2"
 )
@@ -17,45 +16,30 @@ func parseText() {
 		log.Fatal(err)
 	}
 
-	rand.Seed(time.Now().UnixNano())
-	var startingIndex = 0
 	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD", "VBP", "VBZ"}
 
-	// Iterate over the doc's sentences:
-	for _, sent := range doc.Sentences() {
+	var wg sync.WaitGroup
+	wg.Add(len(doc.Tokens()))
 
-		sentDoc, err := prose.NewDocument(sent.Text)
-		if err != nil {
-			log.Fatal(err)
-		}
+	var possibleReplacers []prose.Token
 
-		var possibleReplacers []prose.Token
-
-		for _, tok := range sentDoc.Tokens() {
-			if len(tok.Text) > 4 && containsString(canBeReplaced, tok.Tag) {
-				possibleReplacers = append(possibleReplacers, tok)
+	for i := 0; i < len(doc.Tokens()); i++ {
+		go func(i int) {
+			defer wg.Done()
+			var tok = doc.Tokens()[i]
+			if len(tok.Text) > 4 && containsString(canBeReplaced, tok.Tag) && strings.Index(tok.Text, ".") < 0 {
+				possibleReplacers = append(possibleReplacers, doc.Tokens()[i])
 			}
-		}
+		}(i)
+	}
+	wg.Wait()
 
-		var twoOrThree = rand.Intn(2) + 1
-		var numFound = 0
-		var alreadyFound []string
-
-		for numFound != twoOrThree && numFound < len(possibleReplacers) {
-			var rando = rand.Intn(len(possibleReplacers))
-			if !containsString(alreadyFound, possibleReplacers[rando].Text) {
-
-				var hole = new(Hole)
-				hole.Index = startingIndex
-				hole.OldWord = possibleReplacers[rando].Text
-				hole.PartOfSpeech = posToLong[possibleReplacers[rando].Tag]
-				holes = append(holes, *hole)
-				alreadyFound = append(alreadyFound, hole.OldWord)
-
-				numFound++
-			}
-		}
-		startingIndex = startingIndex + len(sent.Text)
+	for i := 0; i < len(possibleReplacers); i = i + 3 {
+		var hole = new(Hole)
+		hole.Index = 0
+		hole.OldWord = possibleReplacers[i].Text
+		hole.PartOfSpeech = posToLong[possibleReplacers[i].Tag]
+		holes = append(holes, *hole)
 	}
 
 }

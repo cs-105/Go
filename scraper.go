@@ -14,7 +14,7 @@ func Scrape(topic, searchTerm string) string {
 		result = WikiRetriever(searchTerm)
 	case "news":
 		result = NewsRetriever(searchTerm)
-	case "songs":
+	case "lyrics":
 		result = LyricRetriever(searchTerm)
 	}
 	return result
