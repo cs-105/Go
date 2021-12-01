@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -13,7 +12,6 @@ func insertWords(newWords []string) {
 	for _, element := range holes {
 		index = findWordLocation(element.OldWord, element.Index)
 		var wordlen = len(element.OldWord)
-		fmt.Println(newWords[counter])
 		text = text[0:index] + newWords[counter] + text[index+wordlen:]
 		counter++
 	}
