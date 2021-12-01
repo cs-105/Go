@@ -31,11 +31,14 @@ func main() {
 	`
 	fmt.Println(asciiArt)
 
-	fmt.Println("Welcome to Interactive Madlibs!")
+	fmt.Println("Welcome to GO Tell it on the Mountain, an interactive madlib game!")
 
 	// Println function is used to
 	// display output in the next line
-	fmt.Println("To begin, please enter a topic: ")
+	fmt.Println("Please select a source for your madlib: ")
+	fmt.Println("Enter 1 for lyrics")
+	fmt.Println("Enter 2 for news")
+	fmt.Println("Enter 3 for wikipedia")
 
 	// var then variable name then variable type
 	var topic string
@@ -43,17 +46,30 @@ func main() {
 
 	// Taking input from user
 	fmt.Scanln(&topic)
+	for topic != "1" && topic != "2" && topic != "3" {
+		fmt.Println("Invalid input. Please enter 1, 2, or 3")
+		fmt.Scanln(&topic)
+	}
+
+	if topic == "1" {
+		topic = "lyrics"
+	} else if topic == "2" {
+		topic = "news"
+	} else if topic == "3" {
+		topic = "wikipedia"
+	}
 
 	// Print function is used to
 	// display output in the same line
-	fmt.Print("You have selected: ")
+	//fmt.Print("You have selected: ")
 
 	// Addition of two string
-	fmt.Println(topic)
+	//fmt.Println(topic)
+	fmt.Println("Please enter a topic for your madlib. Ex: penguins")
 
 	fmt.Scanln(&searchTerm)
 
-	fmt.Println("What would you like to search? ")
+	fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
 	text = Scrape(topic, searchTerm)
 	//fmt.Println(Scrape(topic, searchTerm))
@@ -67,7 +83,6 @@ func main() {
 		fmt.Println("Please enter ", element.PartOfSpeech)
 		var newWord string
 		fmt.Scanln(&newWord)
-		fmt.Println("You have entered: ", newWord)
 
 		newWords = append(newWords, newWord)
 	}
