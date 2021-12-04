@@ -8,7 +8,8 @@ import (
 
 var lyrics string
 
-func LyricRetriever(searchTerm string) string {
+func LyricRetriever(c chan string, searchTerm string) chan string {
+	api := "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320"
 	parameters := map[string]string{
 		"engine":  "google",
 		"q":       searchTerm + " song lyrics",
@@ -23,5 +24,6 @@ func LyricRetriever(searchTerm string) string {
 	}
 	answerBox := results["answer_box"].(map[string]interface{})
 	lyrics := answerBox["lyrics"].(string)
-	return lyrics
+	c <- lyrics
+	return c
 }

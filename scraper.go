@@ -6,16 +6,17 @@ import (
 
 var api = "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320"
 
-func Scrape(topic, searchTerm string) string {
+func Scrape(c chan string, topic, searchTerm string) chan string {
 	topic = strings.ToLower(topic)
-	var result string
+
 	switch topic {
 	case "wiki":
-		result = WikiRetriever(searchTerm)
+		go WikiRetriever(c, searchTerm)
 	case "news":
-		result = NewsRetriever(searchTerm)
+		go NewsRetriever(c, searchTerm)
 	case "lyrics":
-		result = LyricRetriever(searchTerm)
+		go LyricRetriever(c, searchTerm)
 	}
-	return result
+
+	return c
 }
