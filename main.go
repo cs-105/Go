@@ -80,10 +80,29 @@ func main() {
 
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
-		c := make(chan string)
-		go Scrape(c, topic, searchTerm)
-		originalText := <-c
-		var text = originalText
+		texts := make(chan pair)
+		go Scrape(texts, topic, searchTerm)
+		// one := <- texts
+		// two := <- texts
+		// three := <- texts
+		var originalText string
+
+		// leftover pairs of text and topic that can be accessed later
+		var leftOvers []pair
+		for pair := range texts {
+			pos := 0
+			if pair.topic == topic {
+				originalText = pair.text
+			} else {
+				leftOvers[pos] = pair
+				pos++
+			}
+		}
+
+		// taliasMap := make(map[string]string, 3)
+		// taliasMap[one.topic] = one.text
+		// taliasMap[two.topic] = two.text
+		// taliasMap[three.topic] = three.text
 		//fmt.Println(Scrape(topic, searchTerm))
 
 		var holes []Hole = parseText(originalText)

@@ -4,19 +4,16 @@ import (
 	"strings"
 )
 
-var api = "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320"
+type pair struct {
+	topic string
+	text  string
+}
 
-func Scrape(c chan string, topic, searchTerm string) chan string {
+func Scrape(texts chan pair, topic, searchTerm string) {
 	topic = strings.ToLower(topic)
 
-	switch topic {
-	case "wiki":
-		go WikiRetriever(c, searchTerm)
-	case "news":
-		go NewsRetriever(c, searchTerm)
-	case "lyrics":
-		go LyricRetriever(c, searchTerm)
-	}
+	go WikiRetriever(searchTerm, texts)
+	go NewsRetriever(searchTerm, texts)
+	go LyricRetriever(searchTerm, texts)
 
-	return c
 }
