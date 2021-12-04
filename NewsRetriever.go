@@ -14,11 +14,12 @@ var coll = colly.NewCollector(
 )
 var newsLinks = make(map[string]int)
 
-func NewsRetriever(searchTerm string) string {
+func NewsRetriever(c chan string, searchTerm string) chan string {
 	linkRetriever(searchTerm, newsLinks)
 	link := linkFollower(newsLinks)
 	text := pageReader(link)
-	return text
+	c <- text
+	return c
 }
 
 func linkRetriever(searchTerm string, links map[string]int) map[string]int {

@@ -8,7 +8,7 @@ import (
 
 var p string
 
-func WikiRetriever(searchTerm string) string {
+func WikiRetriever(ch chan string, searchTerm string) chan string {
 	search := strings.Split(searchTerm, " ")
 	query := strings.Join(search, "_")
 
@@ -24,5 +24,6 @@ func WikiRetriever(searchTerm string) string {
 
 	c.Visit("https://en.wikipedia.org/wiki/" + query)
 
-	return p
+	ch <- p
+	return ch
 }

@@ -66,10 +66,12 @@ func main() {
 
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
-		var text = Scrape(topic, searchTerm)
-		var originalText = text
+		c := make(chan string)
+		go Scrape(c, topic, searchTerm)
+		originalText := <-c
+		//fmt.Println(Scrape(topic, searchTerm))
 
-		var holes []Hole = parseText(text)
+		var holes []Hole = parseText(originalText)
 
 		var newWords []string
 		for _, element := range holes {
@@ -80,7 +82,7 @@ func main() {
 			newWords = append(newWords, newWord)
 		}
 
-		text = insertWords(newWords, holes, text)
+		var text = insertWords(newWords, holes, originalText)
 
 		fmt.Println("\n" + text)
 

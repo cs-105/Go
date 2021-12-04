@@ -5,12 +5,13 @@ import (
 	"strings"
 	"sync"
 
-	"gopkg.in/jdkato/prose.v2"
+	"github.com/jdkato/prose/v2"
 )
 
 func parseText(text string) []Hole {
 
 	// Create a new document with the default configuration:
+
 	doc, err := prose.NewDocument(text)
 	if err != nil {
 		log.Fatal(err)
