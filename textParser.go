@@ -8,7 +8,7 @@ import (
 	"gopkg.in/jdkato/prose.v2"
 )
 
-func parseText() {
+func parseText(text string) []Hole {
 
 	// Create a new document with the default configuration:
 	doc, err := prose.NewDocument(text)
@@ -18,6 +18,7 @@ func parseText() {
 
 	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD", "VBP", "VBZ"}
 
+	//start := time.Now()
 	var wg sync.WaitGroup
 	wg.Add(len(doc.Tokens()))
 
@@ -34,12 +35,19 @@ func parseText() {
 	}
 	wg.Wait()
 
+	/*fmt.Print("average per token: ")
+	var denom float64 = float64(int64(time.Since(start)))
+	var avg float64 = (float64(len(doc.Tokens())) / denom) * 100000
+	fmt.Println(avg)*/
+
+	var holes []Hole
 	for i := 0; i < len(possibleReplacers); i = i + 3 {
 		var hole = new(Hole)
-		hole.Index = 0
 		hole.OldWord = possibleReplacers[i].Text
 		hole.PartOfSpeech = posToLong[possibleReplacers[i].Tag]
 		holes = append(holes, *hole)
 	}
+
+	return holes
 
 }

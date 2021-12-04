@@ -4,25 +4,15 @@ import (
 	"strings"
 )
 
-func insertWords(newWords []string) {
+func insertWords(newWords []string, holes []Hole, text string) string {
 
-	var index int
-
-	var counter = 0
-	for _, element := range holes {
-		index = findWordLocation(element.OldWord, element.Index)
+	for i, element := range holes {
+		var index = strings.Index(text, element.OldWord)
 		var wordlen = len(element.OldWord)
-		text = text[0:index] + newWords[counter] + text[index+wordlen:]
-		counter++
+		text = text[0:index] + newWords[i] + text[index+wordlen:]
+		i++
 	}
 
-}
-
-func findWordLocation(substr string, position int) int {
-
-	var textToSearch = text[position:]
-	var loc = strings.Index(textToSearch, substr)
-
-	return loc + position
+	return text
 
 }
