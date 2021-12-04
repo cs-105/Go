@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+
+	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
 //global variables
@@ -11,9 +14,20 @@ var posToShort map[string]string
 // main function
 func main() {
 
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+
+	speech := htgotts.Speech{Folder: "audio", Language: "en"}
+	speech.Speak("You are an awesome golang programmer.")
+
+	colorBlue := "\033[34m"
+
 	//populate maps
 	posToLong = makePosToLong()
 	posToShort = makePosToShort()
+
+	fmt.Print(colorBlue)
 
 	asciiArt :=
 		`
@@ -36,10 +50,8 @@ func main() {
 	for playAgain == "p" {
 		// Println function is used to
 		// display output in the next line
-		fmt.Println("Please select a source for your madlib: ")
-		fmt.Println("Enter 1 for lyrics")
-		fmt.Println("Enter 2 for news")
-		fmt.Println("Enter 3 for wikipedia")
+		fmt.Println("\nPlease select a source for your madlib: ")
+		fmt.Println("1 - lyrics \t 2 - news \t 3 - wikipedia")
 
 		// var then variable name then variable type
 		var topic string
@@ -48,7 +60,9 @@ func main() {
 		// Taking input from user
 		fmt.Scanln(&topic)
 		for topic != "1" && topic != "2" && topic != "3" {
-			fmt.Println("Invalid input. Please enter 1, 2, or 3")
+			fmt.Println("\nInvalid input.")
+			fmt.Println("Please select a source for your madlib: ")
+			fmt.Println("1 - lyrics \t 2 - news \t 3 - wikipedia")
 			fmt.Scanln(&topic)
 		}
 
@@ -66,6 +80,7 @@ func main() {
 
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
+<<<<<<< HEAD
 		texts := make(chan pair)
 		go Scrape(texts, topic, searchTerm)
 		// one := <- texts
@@ -82,20 +97,25 @@ func main() {
 		// taliasMap[one.topic] = one.text
 		// taliasMap[two.topic] = two.text
 		// taliasMap[three.topic] = three.text
+=======
+		c := make(chan string)
+		go Scrape(c, topic, searchTerm)
+		originalText := <-c
+		var text = originalText
+>>>>>>> beb39922f490f291250c2cdcc91913c36bbf8cd5
 		//fmt.Println(Scrape(topic, searchTerm))
 
 		var holes []Hole = parseText(originalText)
 
 		var newWords []string
 		for _, element := range holes {
-			fmt.Println("Please enter ", element.PartOfSpeech)
+			fmt.Println("Please enter", element.PartOfSpeech)
 			var newWord string
 			fmt.Scanln(&newWord)
-
 			newWords = append(newWords, newWord)
 		}
 
-		var text = insertWords(newWords, holes, originalText)
+		text = insertWords(newWords, holes, text)
 
 		fmt.Println("\n" + text)
 
