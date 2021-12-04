@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+
+	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
 //global variables
@@ -11,9 +14,28 @@ var posToShort map[string]string
 // main function
 func main() {
 
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+
+	speech := htgotts.Speech{Folder: "audio", Language: "en"}
+	speech.Speak("You are an awesome golang programmer.")
+
+	colorReset := "\033[0m"
+
+	colorRed := "\033[31m"
+	//colorGreen := "\033[32m"
+	//colorYellow := "\033[33m"
+	colorBlue := "\033[34m"
+	/*colorPurple := "\033[35m"
+	colorCyan := "\033[36m"
+	colorWhite := "\033[37m"*/
+
 	//populate maps
 	posToLong = makePosToLong()
 	posToShort = makePosToShort()
+
+	fmt.Print(colorBlue)
 
 	asciiArt :=
 		`
@@ -36,10 +58,8 @@ func main() {
 	for playAgain == "p" {
 		// Println function is used to
 		// display output in the next line
-		fmt.Println("Please select a source for your madlib: ")
-		fmt.Println("Enter 1 for lyrics")
-		fmt.Println("Enter 2 for news")
-		fmt.Println("Enter 3 for wikipedia")
+		fmt.Println("\nPlease select a source for your madlib: ")
+		fmt.Println("1 - lyrics \t 2 - news \t 3 - wikipedia")
 
 		// var then variable name then variable type
 		var topic string
@@ -48,7 +68,9 @@ func main() {
 		// Taking input from user
 		fmt.Scanln(&topic)
 		for topic != "1" && topic != "2" && topic != "3" {
-			fmt.Println("Invalid input. Please enter 1, 2, or 3")
+			fmt.Println("\nInvalid input.")
+			fmt.Println("Please select a source for your madlib: ")
+			fmt.Println("1 - lyrics \t 2 - news \t 3 - wikipedia")
 			fmt.Scanln(&topic)
 		}
 
@@ -73,15 +95,13 @@ func main() {
 
 		var newWords []string
 		for _, element := range holes {
-			fmt.Println("Please enter ", element.PartOfSpeech)
+			fmt.Println("Please enter", element.PartOfSpeech)
 			var newWord string
 			fmt.Scanln(&newWord)
-
 			newWords = append(newWords, newWord)
 		}
 
 		text = insertWords(newWords, holes, text)
-
 		fmt.Println("\n" + text)
 
 		fmt.Println("\nWould you like to see the original text? Enter y or n")

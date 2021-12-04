@@ -5,7 +5,7 @@ import (
 	"strings"
 	"sync"
 
-	"gopkg.in/jdkato/prose.v2"
+	"github.com/jdkato/prose/v2"
 )
 
 func parseText(text string) []Hole {
