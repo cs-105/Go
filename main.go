@@ -21,15 +21,7 @@ func main() {
 	speech := htgotts.Speech{Folder: "audio", Language: "en"}
 	speech.Speak("You are an awesome golang programmer.")
 
-	colorReset := "\033[0m"
-
-	colorRed := "\033[31m"
-	//colorGreen := "\033[32m"
-	//colorYellow := "\033[33m"
 	colorBlue := "\033[34m"
-	/*colorPurple := "\033[35m"
-	colorCyan := "\033[36m"
-	colorWhite := "\033[37m"*/
 
 	//populate maps
 	posToLong = makePosToLong()
@@ -91,6 +83,7 @@ func main() {
 		c := make(chan string)
 		go Scrape(c, topic, searchTerm)
 		originalText := <-c
+		var text = originalText
 		//fmt.Println(Scrape(topic, searchTerm))
 
 		var holes []Hole = parseText(originalText)
@@ -102,6 +95,8 @@ func main() {
 			fmt.Scanln(&newWord)
 			newWords = append(newWords, newWord)
 		}
+
+		text = insertWords(newWords, holes, text)
 
 		fmt.Println("\n" + text)
 
