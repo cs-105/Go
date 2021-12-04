@@ -8,7 +8,7 @@ import (
 
 var p string
 
-func WikiRetriever(ch chan string, searchTerm string) chan string {
+func WikiRetriever(searchTerm string, wiki chan pair) {
 	search := strings.Split(searchTerm, " ")
 	query := strings.Join(search, "_")
 
@@ -18,12 +18,11 @@ func WikiRetriever(ch chan string, searchTerm string) chan string {
 		colly.MaxDepth(1),
 	)
 
-	c.OnHTML(".mw-parser-output", func(h *colly.HTMLElement) {
+	go c.OnHTML(".mw-parser-output", func(h *colly.HTMLElement) {
 		p = h.ChildText("p")
 	})
 
-	c.Visit("https://en.wikipedia.org/wiki/" + query)
+	go c.Visit("https://en.wikipedia.org/wiki/" + query)
 
-	ch <- p
-	return ch
+	wiki <- pair{"wikipedia", p}
 }

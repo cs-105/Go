@@ -14,15 +14,17 @@ var coll = colly.NewCollector(
 )
 var newsLinks = make(map[string]int)
 
-func NewsRetriever(c chan string, searchTerm string) chan string {
-	linkRetriever(searchTerm, newsLinks)
+func NewsRetriever(searchTerm string, news chan pair) {
+	done := make(chan bool)
+	go linkRetriever(searchTerm, newsLinks, done)
+	<-done
 	link := linkFollower(newsLinks)
 	text := pageReader(link)
-	c <- text
-	return c
+
+	news <- pair{"news", text}
 }
 
-func linkRetriever(searchTerm string, links map[string]int) map[string]int {
+func linkRetriever(searchTerm string, links map[string]int, done chan bool) map[string]int {
 	c := colly.NewCollector(
 		colly.UserAgent("MadLibs"),
 		colly.MaxDepth(1),
@@ -36,24 +38,24 @@ func linkRetriever(searchTerm string, links map[string]int) map[string]int {
 	query := strings.Join(search, "+")
 	// Find and visit all links
 
-	c.OnHTML(".views-row.views-row-1.views-row-odd.views-row-first.search-value", func(e *colly.HTMLElement) {
+	go c.OnHTML(".views-row.views-row-1.views-row-odd.views-row-first.search-value", func(e *colly.HTMLElement) {
 		link := e.ChildAttr("a", "href")
 		news.Visit("https://www.allsides.com" + link)
 	})
 
-	news.OnHTML(".news-item.center", func(e *colly.HTMLElement) {
+	go news.OnHTML(".news-item.center", func(e *colly.HTMLElement) {
 		linkCounter++
 		link := e.ChildAttr("a", "href")
 		links[link] = linkCounter
 	})
 
-	news.OnHTML(".news-item.right", func(e *colly.HTMLElement) {
+	go news.OnHTML(".news-item.right", func(e *colly.HTMLElement) {
 		linkCounter++
 		link := e.ChildAttr("a", "href")
 		links[link] = linkCounter
 	})
 
-	news.OnHTML(".news-item.right", func(e *colly.HTMLElement) {
+	go news.OnHTML(".news-item.right", func(e *colly.HTMLElement) {
 		linkCounter++
 		link := e.ChildAttr("a", "href")
 		links[link] = linkCounter
@@ -61,6 +63,7 @@ func linkRetriever(searchTerm string, links map[string]int) map[string]int {
 
 	c.Visit("https://www.allsides.com/search?search=" + query)
 
+	done <- true
 	return links
 }
 
