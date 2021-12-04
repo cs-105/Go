@@ -86,9 +86,16 @@ func main() {
 		// two := <- texts
 		// three := <- texts
 		var originalText string
+
+		// leftover pairs of text and topic that can be accessed later
+		var leftOvers []pair
 		for pair := range texts {
+			pos := 0
 			if pair.topic == topic {
 				originalText = pair.text
+			} else {
+				leftOvers[pos] = pair
+				pos++
 			}
 		}
 
