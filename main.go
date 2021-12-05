@@ -83,7 +83,6 @@ func main() {
 		// two := <- texts
 		// three := <- texts
 		var originalText string
-		var text = originalText
 
 		// leftover pairs of text and topic that can be accessed later
 		leftOvers := make([]pair, 2)
