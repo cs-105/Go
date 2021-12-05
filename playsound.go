@@ -27,8 +27,8 @@ import (
 	"github.com/hajimehoshi/go-mp3"
 )
 
-func run() error {
-	f, err := os.Open("audio/test.mp3")
+func run(filePath string) error {
+	f, err := os.Open(filePath)
 	if err != nil {
 		return err
 	}
