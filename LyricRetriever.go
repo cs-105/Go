@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 
 	g "github.com/serpapi/google-search-results-golang"
@@ -22,8 +23,11 @@ func LyricRetriever(searchTerm string, lyric chan pair) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	answerBox := results["answer_box"].(map[string]interface{})
-	lyrics := answerBox["lyrics"].(string)
-
-	lyric <- pair{"lyrics", lyrics}
+	if answerBox, ok := results["answer_box"].(map[string]interface{}); ok {
+		lyrics := answerBox["lyrics"].(string)
+		lyric <- pair{"lyrics", lyrics, nil}
+	} else {
+		err := errors.New("No lyrics found.")
+		lyric <- pair{"lyrics", "", err}
+	}
 }
