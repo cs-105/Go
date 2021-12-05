@@ -18,10 +18,14 @@ func NewsRetriever(searchTerm string, news chan pair) {
 	done := make(chan bool)
 	go linkRetriever(searchTerm, newsLinks, done)
 	<-done
-	link := linkFollower(newsLinks)
-	text := pageReader(link)
+	link, err := linkFollower(newsLinks)
+	if err != nil {
+		news <- pair{"news", link, err}
+	} else {
+		text, err := pageReader(link)
+		news <- pair{"news", text, err}
+	}
 
-	news <- pair{"news", text}
 }
 
 func linkRetriever(searchTerm string, links map[string]int, done chan bool) map[string]int {
@@ -67,25 +71,27 @@ func linkRetriever(searchTerm string, links map[string]int, done chan bool) map[
 	return links
 }
 
-func linkFollower(links map[string]int) string {
-	keys := make([]string, len(links))
-	i := 0
-	for k := range links {
-		keys[i] = k
-		i++
+func linkFollower(links map[string]int) (string, error) {
+	if len(links) != 0 {
+		keys := make([]string, len(links))
+		//	i := 0
+		for k, i := range links {
+			keys[i] = k
+		}
+		link := keys[rand.Intn(len(keys))]
+
+		return link, nil
+	} else {
+		return "", nil
 	}
-
-	link := keys[rand.Intn(len(keys))]
-
-	return link
 }
 
-func pageReader(link string) string {
+func pageReader(link string) (string, error) {
 	var text string
 	coll.OnHTML(".article-description", func(e *colly.HTMLElement) {
 		text = e.ChildText("p")
 	})
 
-	coll.Visit(link)
-	return text
+	err := coll.Visit(link)
+	return text, err
 }

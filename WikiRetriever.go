@@ -22,7 +22,7 @@ func WikiRetriever(searchTerm string, wiki chan pair) {
 		p = h.ChildText("p")
 	})
 
-	go c.Visit("https://en.wikipedia.org/wiki/" + query)
+	err := c.Visit("https://en.wikipedia.org/wiki/" + query)
 
-	wiki <- pair{"wikipedia", p}
+	wiki <- pair{"wikipedia", p, err}
 }

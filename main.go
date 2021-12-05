@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
-
-	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
 //global variables
@@ -14,12 +11,12 @@ var posToShort map[string]string
 // main function
 func main() {
 
-	if err := run(); err != nil {
-		log.Fatal(err)
-	}
+	// if err := run(); err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	speech := htgotts.Speech{Folder: "audio", Language: "en"}
-	speech.Speak("You are an awesome golang programmer.")
+	// speech := htgotts.Speech{Folder: "audio", Language: "en"}
+	// speech.Speak("You are an awesome golang programmer.")
 
 	colorBlue := "\033[34m"
 
@@ -89,9 +86,18 @@ func main() {
 		var text = originalText
 
 		// leftover pairs of text and topic that can be accessed later
-		var leftOvers []pair
+		leftOvers := make([]pair, 2)
 		for pair := range texts {
 			pos := 0
+
+			if pair.err != nil {
+				fmt.Printf("We found no %s for that search.", pair.topic)
+			} else if pair.topic == topic {
+				originalText = pair.text
+			} else {
+				leftOvers[pos] = pair
+			}
+
 			if pair.topic == topic {
 				originalText = pair.text
 			} else {
