@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
+	"strconv"
+	"strings"
 
 	htgotts "github.com/hegedustibor/htgo-tts"
 )
@@ -13,13 +17,6 @@ var posToShort map[string]string
 
 // main function
 func main() {
-
-	if err := run(); err != nil {
-		log.Fatal(err)
-	}
-
-	speech := htgotts.Speech{Folder: "audio", Language: "en"}
-	speech.Speak("You are an awesome golang programmer.")
 
 	colorBlue := "\033[34m"
 
@@ -99,6 +96,8 @@ func main() {
 			}
 		}
 
+		text := originalText
+
 		// taliasMap := make(map[string]string, 3)
 		// taliasMap[one.topic] = one.text
 		// taliasMap[two.topic] = two.text
@@ -118,6 +117,59 @@ func main() {
 		text = insertWords(newWords, holes, text)
 
 		fmt.Println("\n" + text)
+
+		//line 104
+		var splitText []string
+		i := 0
+		j := 100
+		for i < len(text) {
+
+			if j > len(text)-1 {
+				splitText = append(splitText, text[i:len(text)])
+			} else {
+				j = j + (strings.Index(text[j:len(text)], " "))
+				splitText = append(splitText, text[i:j])
+			}
+			i = j
+			j = j + 100
+		}
+
+		fmt.Println(text)
+
+		speech := htgotts.Speech{Folder: "audio", Language: "en"}
+
+		for i, element := range splitText {
+			speech.Speak(element)
+			files, err := ioutil.ReadDir("audio")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			for _, file := range files {
+				var name string = file.Name()
+				if string(name[0]) == "e" {
+					var dst string = "a" + strconv.Itoa(i) + ".mp3"
+					os.Rename("audio/"+file.Name(), "audio/"+dst)
+				}
+			}
+
+		}
+		files, err := ioutil.ReadDir("audio")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, file := range files {
+			if err := run("audio/" + file.Name()); err != nil {
+				log.Fatal(err)
+			}
+		}
+
+		//remove all frm audio
+		err2 := os.RemoveAll("audio")
+		if err2 != nil {
+			log.Fatal(err2)
+		}
 
 		fmt.Println("\nWould you like to see the original text? Enter y or n")
 		var seeOriginal string
