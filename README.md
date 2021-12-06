@@ -17,9 +17,12 @@ The easiest way to play is to play online at https://replit.com/@taliabjelland/G
 ### 2. Download the executable
 If you want your Mad Lib read out loud to you, you'll need to download the executable file.
 
-#### For Mac: [goProject.zip](https://github.com/cs-105/Go/files/7663618/goProject.zip)
-#### For Linux: 
-#### For Windows: 
+#### For Mac: [madLibMac.zip](https://github.com/cs-105/Go/files/7663969/madLibMac.zip)
+
+#### For Windows 32-bit architecture: [Uploading madLibWindows32.zip…]()
+
+#### For Windows 64-bit architecture: [madLibWindows64.zip](https://github.com/cs-105/Go/files/7663974/madLibWindows64.zip)
+
 
 ### 3. Clone the repository
 Finally, if you want to build on top of this project, we recommend cloning the repository.
@@ -29,11 +32,11 @@ In desired command line run
 git clone https://github.com/cs-105/Go.git
 ```
 #### Step 2: 
-If you want don't want to build the executable just run:
+To run the project
 ```zsh
 go run .
 ```
-else run:
+Or, create an executable file
 ```zsh
 go build
 ```
