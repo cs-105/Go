@@ -8,7 +8,7 @@ import (
 
 var p string
 
-func WikiRetriever(searchTerm string, wiki chan pair) {
+func (text *texts) WikiRetriever(searchTerm string) {
 	search := strings.Split(searchTerm, " ")
 	query := strings.Join(search, "_")
 
@@ -24,5 +24,6 @@ func WikiRetriever(searchTerm string, wiki chan pair) {
 
 	err := c.Visit("https://en.wikipedia.org/wiki/" + query)
 
-	wiki <- pair{"wikipedia", p, err}
+	text.text = p
+	text.err = err
 }

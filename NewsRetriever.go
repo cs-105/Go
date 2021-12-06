@@ -15,21 +15,27 @@ var coll = colly.NewCollector(
 )
 var newsLinks = make(map[string]int)
 
-func NewsRetriever(searchTerm string, news chan pair) {
-	done := make(chan bool)
-	go linkRetriever(searchTerm, newsLinks, done)
-	<-done
-	link, err := linkFollower(newsLinks)
+func (text *texts) NewsRetriever(searchTerm string) {
+	newsLinks, err := linkRetriever(searchTerm, newsLinks)
 	if err != nil {
-		news <- pair{"news", link, err}
+		text.text = ""
+		text.err = err
 	} else {
-		text, err := pageReader(link)
-		news <- pair{"news", text, err}
+		link, err := linkFollower(newsLinks)
+
+		if err != nil {
+			text.text = link
+			text.err = err
+		} else {
+			str, err := pageReader(link)
+			text.text = str
+			text.err = err
+		}
 	}
 
 }
 
-func linkRetriever(searchTerm string, links map[string]int, done chan bool) map[string]int {
+func linkRetriever(searchTerm string, links map[string]int) (map[string]int, error) {
 	c := colly.NewCollector(
 		colly.UserAgent("MadLibs"),
 		colly.MaxDepth(1),
@@ -66,17 +72,16 @@ func linkRetriever(searchTerm string, links map[string]int, done chan bool) map[
 		links[link] = linkCounter
 	})
 
-	c.Visit("https://www.allsides.com/search?search=" + query)
+	err := c.Visit("https://www.allsides.com/search?search=" + query)
 
-	done <- true
-	return links
+	return links, err
 }
 
 func linkFollower(links map[string]int) (string, error) {
 	if len(links) != 0 {
 		keys := make([]string, len(links))
 		i := 0
-		for k, _ := range links {
+		for k := range links {
 			keys[i] = k
 			i++
 		}

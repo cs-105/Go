@@ -1,15 +1,18 @@
 package main
 
-type pair struct {
-	topic string
-	text  string
-	err   error
+type texts struct {
+	text string
+	err  error
 }
 
-func Scrape(texts chan pair, topic, searchTerm string) {
+func Scrape(searchTerm string) (texts, texts, texts) {
+	lyrics := texts{}
+	wikipedia := texts{}
+	news := texts{}
 
-	go NewsRetriever(searchTerm, texts)
-	go WikiRetriever(searchTerm, texts)
-	go LyricRetriever(searchTerm, texts)
+	lyrics.LyricRetriever(searchTerm)
+	news.NewsRetriever(searchTerm)
+	wikipedia.WikiRetriever(searchTerm)
 
+	return lyrics, news, wikipedia
 }
