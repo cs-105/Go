@@ -3,12 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 
 	g "github.com/serpapi/google-search-results-golang"
 )
-
-var lyrics string
 
 // retrieves lyrics using google api
 func (texts *texts) LyricRetriever(searchTerm string, wg *sync.WaitGroup) {
@@ -29,7 +28,15 @@ func (texts *texts) LyricRetriever(searchTerm string, wg *sync.WaitGroup) {
 	// if there is a lyric box then we grab it
 	// else return an error
 	if answerBox, ok := results["answer_box"].(map[string]interface{}); ok {
-		texts.text = answerBox["lyrics"].(string)
+		// splits on the newline characters
+		lines := strings.Split(answerBox["lyrics"].(string), "\n")
+
+		// collects only the first 8 lines
+		// rejoins it in it's original format
+		lines = lines[:8]
+		lyrics := strings.Join(lines, "\n")
+
+		texts.text = lyrics
 		texts.err = nil
 	} else {
 		err := errors.New("No lyrics found.")
