@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"math/rand"
 	"strings"
 
@@ -74,15 +75,17 @@ func linkRetriever(searchTerm string, links map[string]int, done chan bool) map[
 func linkFollower(links map[string]int) (string, error) {
 	if len(links) != 0 {
 		keys := make([]string, len(links))
-		//	i := 0
-		for k, i := range links {
+		i := 0
+		for k, _ := range links {
 			keys[i] = k
+			i++
 		}
 		link := keys[rand.Intn(len(keys))]
 
 		return link, nil
 	} else {
-		return "", nil
+		err := errors.New("No news found")
+		return "", err
 	}
 }
 
