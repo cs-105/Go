@@ -1,3 +1,5 @@
+# Go Tell it on the Mountain! 
+A Mad Libs-inspired game built with Golang
 ![image](https://user-images.githubusercontent.com/60273828/144920762-5d603d67-146a-4cd4-b7d1-6fde26bd1bec.png)
 
 
