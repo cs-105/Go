@@ -1,3 +1,8 @@
+/*
+* Written by Talia Bjelland, 2021
+* Purpose: replace words in original madlib text with user inputted words
+ */
+
 package main
 
 import (

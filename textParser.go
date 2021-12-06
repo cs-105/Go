@@ -1,3 +1,8 @@
+/*
+* Written by Talia Bjelland, 2021
+* Purpose: find suitable words to replace in madlib text
+ */
+
 package main
 
 import (
@@ -10,21 +15,19 @@ import (
 
 func parseText(text string) []Hole {
 
-	// Create a new document with the default configuration:
-
 	doc, err := prose.NewDocument(text)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD", "VBP", "VBZ"}
+	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD"}
 
-	//start := time.Now()
 	var wg sync.WaitGroup
 	wg.Add(len(doc.Tokens()))
 
 	var possibleReplacers []prose.Token
 
+	//iterate over all tokens and identify those that are suitable for replacement
 	for i := 0; i < len(doc.Tokens()); i++ {
 		go func(i int) {
 			defer wg.Done()
@@ -36,11 +39,8 @@ func parseText(text string) []Hole {
 	}
 	wg.Wait()
 
-	/*fmt.Print("average per token: ")
-	var denom float64 = float64(int64(time.Since(start)))
-	var avg float64 = (float64(len(doc.Tokens())) / denom) * 100000
-	fmt.Println(avg)*/
-
+	//choose every 3rd replaceable word to be replaced
+	//due to the multithreading nature of code above, they will be relatively randomly replaced throughout the file
 	var holes []Hole
 	for i := 0; i < len(possibleReplacers); i = i + 3 {
 		var hole = new(Hole)
