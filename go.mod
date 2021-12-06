@@ -1,4 +1,4 @@
-module colly
+module gomad
 
 go 1.17
 
