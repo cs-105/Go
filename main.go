@@ -6,10 +6,6 @@ import (
 	"os"
 )
 
-//global variables
-var posToLong map[string]string
-var posToShort map[string]string
-
 // main function
 func main() {
 
@@ -18,10 +14,6 @@ func main() {
 	if err2 != nil {
 		log.Fatal(err2)
 	}
-
-	//populate maps
-	posToLong = makePosToLong()
-	posToShort = makePosToShort()
 
 	blue()
 
