@@ -42,11 +42,13 @@ func parseText(text string) []Hole {
 	//choose every 3rd replaceable word to be replaced
 	//due to the multithreading nature of code above, they will be relatively randomly replaced throughout the file
 	var holes []Hole
-	for i := 0; i < len(possibleReplacers); i = i + 3 {
+	counter := 0
+	for i := 0; (i < len(possibleReplacers)) && (counter < 15); i = i + 3 {
 		var hole = new(Hole)
 		hole.OldWord = possibleReplacers[i].Text
 		hole.PartOfSpeech = posToLong[possibleReplacers[i].Tag]
 		holes = append(holes, *hole)
+		counter++
 	}
 
 	return holes
