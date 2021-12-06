@@ -1,5 +1,7 @@
-//go:build example
-// +build example
+/*
+* Written by Talia Bjelland, 2021
+* Purpose: read madlib text out loud
+ */
 
 package main
 
@@ -34,6 +36,8 @@ import (
 	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
+//run function written by Hajime Hoshe, 2017
+//purpose: plays mp3 files
 func run(filePath string) error {
 	f, err := os.Open(filePath)
 	if err != nil {
@@ -61,7 +65,9 @@ func run(filePath string) error {
 	return nil
 }
 
-func playSound(text string) {
+//splits text into 200-character chunks to keep mp3 file size small
+func textSplitter(text string) []string {
+
 	var splitText []string
 	i := 0
 	j := 100
@@ -76,6 +82,13 @@ func playSound(text string) {
 		i = j
 		j = j + 100
 	}
+
+	return splitText
+}
+
+//plays series of small mp3 files to provide text-to-speech functionality
+func playSound(text string) {
+	var splitText []string = textSplitter(text)
 
 	speech := htgotts.Speech{Folder: "audio", Language: "en"}
 
