@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type Hole struct {
 	PartOfSpeech string
 	Index        int
@@ -29,8 +31,6 @@ func makePosToShort() map[string]string {
 	posConverter["an adverb"] = "RB"
 	posConverter["a verb"] = "VB"
 	posConverter["a past tense verb"] = "VBD"
-	posConverter["a verb non 3rd person singular present"] = "VBP"
-	posConverter["a verb 3rd person singular present"] = "VBZ"
 
 	return posConverter
 }
@@ -46,8 +46,21 @@ func makePosToLong() map[string]string {
 	posConverter["RB"] = "an adverb"
 	posConverter["VB"] = "a verb"
 	posConverter["VBD"] = "a past tense verb"
-	posConverter["VBP"] = "a verb non 3rd person singular present"
-	posConverter["VBZ"] = "a verb 3rd person singular present"
 
 	return posConverter
+}
+
+func blue() {
+	colorBlue := "\033[34m"
+	fmt.Print(string(colorBlue))
+}
+
+func colorReset() {
+	colorReset := "\033[0m"
+	fmt.Print(string(colorReset))
+}
+
+func red() {
+	colorRed := "\033[31m"
+	fmt.Print(string(colorRed))
 }
