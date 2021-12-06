@@ -15,8 +15,14 @@ The easiest way to play is to play online at https://replit.com/@taliabjelland/G
 ![image](https://user-images.githubusercontent.com/60273828/144920589-d5eb18d7-18c5-478e-a254-f19395e05b99.png)
 
 ### 2. Download the executable
+If you want your Mad Lib read out loud to you, you'll need to download the executable file.
+
 #### For Mac: [goProject.zip](https://github.com/cs-105/Go/files/7663618/goProject.zip)
 #### For Linux: 
 #### For Windows: 
 
 ### 3. Clone the repository
+Finally, if you want to build on top of this project, we recommend cloning the repository.
+#### Step 1: 
+#### Step 2: 
+#### Step 3: 
