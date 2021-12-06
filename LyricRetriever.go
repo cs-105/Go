@@ -9,7 +9,7 @@ import (
 
 var lyrics string
 
-func LyricRetriever(searchTerm string, lyric chan pair) {
+func (texts *texts) LyricRetriever(searchTerm string) {
 	api := "8a54bed3f33a5d9127170bc6b3af978878ba7400e9e4c1cf3e0476fdada43320"
 	parameters := map[string]string{
 		"engine":  "google",
@@ -24,10 +24,11 @@ func LyricRetriever(searchTerm string, lyric chan pair) {
 		fmt.Println(err)
 	}
 	if answerBox, ok := results["answer_box"].(map[string]interface{}); ok {
-		lyrics := answerBox["lyrics"].(string)
-		lyric <- pair{"lyrics", lyrics, nil}
+		texts.text = answerBox["lyrics"].(string)
+		texts.err = nil
 	} else {
 		err := errors.New("No lyrics found.")
-		lyric <- pair{"lyrics", "", err}
+		texts.text = ""
+		texts.err = err
 	}
 }

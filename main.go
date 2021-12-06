@@ -2,15 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 
-	"github.com/hajimehoshi/go-mp3"
-	"github.com/hajimehoshi/oto"
 	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
@@ -80,42 +77,19 @@ func main() {
 
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
-		texts := make(chan pair)
-		go Scrape(texts, topic, searchTerm)
-		// one := <- texts
-		// two := <- texts
-		// three := <- texts
+		lyrics, news, wikipedia := Scrape(searchTerm)
+
 		var originalText string
 
-		// leftover pairs of text and topic that can be accessed later
-		leftOvers := make([]pair, 3)
-		for pair := range texts {
-			pos := 0
-
-			if pair.err != nil {
-				fmt.Printf("We found no %s for that search.", pair.topic)
-			} else if pair.topic == topic {
-				originalText = pair.text
-			} else {
-				leftOvers[pos] = pair
-				pos++
-			}
-
-			// if pair.topic == topic {
-			// 	originalText = pair.text
-			// } else {
-			// 	leftOvers[pos] = pair
-			// 	pos++
-			// }
+		if topic == "lyrics" {
+			originalText = lyrics.text
+		} else if topic == "news" {
+			originalText = news.text
+		} else if topic == "wikipedia" {
+			originalText = wikipedia.text
 		}
 
 		text := originalText
-
-		// taliasMap := make(map[string]string, 3)
-		// taliasMap[one.topic] = one.text
-		// taliasMap[two.topic] = two.text
-		// taliasMap[three.topic] = three.text
-		//fmt.Println(Scrape(topic, searchTerm))
 
 		var holes []Hole = parseText(originalText)
 
@@ -197,31 +171,31 @@ func main() {
 
 }
 
-func run(filePath string) error {
-	f, err := os.Open(filePath)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
+// func run(filePath string) error {
+// 	f, err := os.Open(filePath)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer f.Close()
 
-	d, err := mp3.NewDecoder(f)
-	if err != nil {
-		return err
-	}
+// 	d, err := mp3.NewDecoder(f)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	c, err := oto.NewContext(d.SampleRate(), 2, 2, 8192)
-	if err != nil {
-		return err
-	}
-	defer c.Close()
+// 	c, err := oto.NewContext(d.SampleRate(), 2, 2, 8192)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer c.Close()
 
-	p := c.NewPlayer()
-	defer p.Close()
+// 	p := c.NewPlayer()
+// 	defer p.Close()
 
-	fmt.Printf("Length: %d[bytes]\n", d.Length())
+// 	fmt.Printf("Length: %d[bytes]\n", d.Length())
 
-	if _, err := io.Copy(p, d); err != nil {
-		return err
-	}
-	return nil
-}
+// 	if _, err := io.Copy(p, d); err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
