@@ -31,4 +31,12 @@ In desired command line run
 git clone {cloned repo link}
 ```
 #### Step 3: 
-
+If you want don't want to build the executable just run:
+```zsh
+go run .
+```
+else run:
+```zsh
+go build
+```
+and open the 'gomad' binary in the command line
