@@ -2,13 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
-	"strconv"
-	"strings"
-
-	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
 //global variables
@@ -18,13 +13,17 @@ var posToShort map[string]string
 // main function
 func main() {
 
-	colorBlue := "\033[34m"
+	//clear audio folder in preparation for text to speech
+	err2 := os.RemoveAll("audio")
+	if err2 != nil {
+		log.Fatal(err2)
+	}
 
 	//populate maps
 	posToLong = makePosToLong()
 	posToShort = makePosToShort()
 
-	fmt.Print(colorBlue)
+	blue()
 
 	asciiArt :=
 		`
@@ -47,6 +46,7 @@ func main() {
 	for playAgain == "p" {
 		// Println function is used to
 		// display output in the next line
+		colorReset()
 		fmt.Println("\nPlease select a source for your madlib: ")
 		fmt.Println("1 - lyrics \t 2 - news \t 3 - wikipedia")
 
@@ -55,11 +55,15 @@ func main() {
 		var searchTerm string
 
 		// Taking input from user
+		blue()
 		fmt.Scanln(&topic)
 		for topic != "1" && topic != "2" && topic != "3" {
+			red()
 			fmt.Println("\nInvalid input.")
+			colorReset()
 			fmt.Println("Please select a source for your madlib: ")
 			fmt.Println("1 - lyrics \t 2 - news \t 3 - wikipedia")
+			blue()
 			fmt.Scanln(&topic)
 		}
 
@@ -71,10 +75,13 @@ func main() {
 			topic = "wikipedia"
 		}
 
+		colorReset()
 		fmt.Println("Please enter a topic for your madlib. Ex: penguins")
 
+		blue()
 		fmt.Scanln(&searchTerm)
 
+		colorReset()
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
 		lyrics, news, wikipedia := Scrape(searchTerm)
@@ -95,78 +102,38 @@ func main() {
 
 		var newWords []string
 		for _, element := range holes {
+			colorReset()
 			fmt.Println("Please enter", element.PartOfSpeech)
 			var newWord string
+			blue()
 			fmt.Scanln(&newWord)
 			newWords = append(newWords, newWord)
 		}
 
 		text = insertWords(newWords, holes, text)
 
+		colorReset()
 		fmt.Println("\n" + text)
 
 		//line 104
-		var splitText []string
-		i := 0
-		j := 100
-		for i < len(text) {
 
-			if j > len(text)-1 {
-				splitText = append(splitText, text[i:])
-			} else {
-				j = j + (strings.Index(text[j:], " "))
-				splitText = append(splitText, text[i:j])
-			}
-			i = j
-			j = j + 100
-		}
+		playSound(text)
 
-		fmt.Println(text)
-
-		speech := htgotts.Speech{Folder: "audio", Language: "en"}
-
-		for i, element := range splitText {
-			speech.Speak(element)
-			files, err := ioutil.ReadDir("audio")
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			for _, file := range files {
-				var name string = file.Name()
-				if string(name[0]) == "e" {
-					var dst string = "a" + strconv.Itoa(i) + ".mp3"
-					os.Rename("audio/"+file.Name(), "audio/"+dst)
-				}
-			}
-
-		}
-		files, err := ioutil.ReadDir("audio")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		for _, file := range files {
-			if err := run("audio/" + file.Name()); err != nil {
-				log.Fatal(err)
-			}
-		}
-
-		//remove all frm audio
-		err2 := os.RemoveAll("audio")
-		if err2 != nil {
-			log.Fatal(err2)
-		}
-
+		colorReset()
 		fmt.Println("\nWould you like to see the original text? Enter y or n")
 		var seeOriginal string
+		blue()
 		fmt.Scanln(&seeOriginal)
+		colorReset()
 		if seeOriginal == "y" {
 			fmt.Println(originalText)
 		}
 
 		fmt.Println("\nEnter p to play again or enter q to quit")
+
+		blue()
 		fmt.Scanln(&playAgain)
+		colorReset()
 	}
 
 }

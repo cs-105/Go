@@ -18,13 +18,20 @@ package main
 // limitations under the License.
 
 import (
-	"fmt"
 	"io"
 	"os"
 
 	"github.com/hajimehoshi/oto"
 
 	"github.com/hajimehoshi/go-mp3"
+
+	"fmt"
+	"io/ioutil"
+	"log"
+	"strconv"
+	"strings"
+
+	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
 func run(filePath string) error {
@@ -48,16 +55,65 @@ func run(filePath string) error {
 	p := c.NewPlayer()
 	defer p.Close()
 
-	fmt.Printf("Length: %d[bytes]\n", d.Length())
-
 	if _, err := io.Copy(p, d); err != nil {
 		return err
 	}
 	return nil
 }
 
-/*func main() {
-	if err := run(); err != nil {
+func playSound(text string) {
+	var splitText []string
+	i := 0
+	j := 100
+	for i < len(text) {
+
+		if j > len(text)-1 {
+			splitText = append(splitText, text[i:])
+		} else {
+			j = j + (strings.Index(text[j:], " "))
+			splitText = append(splitText, text[i:j])
+		}
+		i = j
+		j = j + 100
+	}
+
+	speech := htgotts.Speech{Folder: "audio", Language: "en"}
+
+	for i, element := range splitText {
+		speech.Speak(element)
+		files, err := ioutil.ReadDir("audio")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, file := range files {
+			var name string = file.Name()
+			if string(name[0]) == "e" {
+				var num string = strconv.Itoa(i)
+				if len(num) == 1 {
+					num = "0" + num
+				}
+				var dst string = "a" + num + ".mp3"
+				os.Rename("audio/"+file.Name(), "audio/"+dst)
+			}
+		}
+
+	}
+	files, err := ioutil.ReadDir("audio")
+	if err != nil {
 		log.Fatal(err)
 	}
-}*/
+
+	for _, file := range files {
+		fmt.Println(file.Name())
+		if err := run("audio/" + file.Name()); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	//remove all frm audio
+	err2 := os.RemoveAll("audio")
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+}

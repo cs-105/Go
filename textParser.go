@@ -17,7 +17,7 @@ func parseText(text string) []Hole {
 		log.Fatal(err)
 	}
 
-	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD", "VBP", "VBZ"}
+	canBeReplaced := []string{"JJ", "NN", "NNP", "NNS", "RB", "VB", "VBD"}
 
 	//start := time.Now()
 	var wg sync.WaitGroup
