@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 
+	"github.com/hajimehoshi/go-mp3"
+	"github.com/hajimehoshi/oto"
 	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
@@ -85,15 +88,25 @@ func main() {
 		var originalText string
 
 		// leftover pairs of text and topic that can be accessed later
-		var leftOvers []pair
+		leftOvers := make([]pair, 3)
 		for pair := range texts {
 			pos := 0
-			if pair.topic == topic {
+
+			if pair.err != nil {
+				fmt.Printf("We found no %s for that search.", pair.topic)
+			} else if pair.topic == topic {
 				originalText = pair.text
 			} else {
 				leftOvers[pos] = pair
 				pos++
 			}
+
+			// if pair.topic == topic {
+			// 	originalText = pair.text
+			// } else {
+			// 	leftOvers[pos] = pair
+			// 	pos++
+			// }
 		}
 
 		text := originalText
@@ -125,9 +138,9 @@ func main() {
 		for i < len(text) {
 
 			if j > len(text)-1 {
-				splitText = append(splitText, text[i:len(text)])
+				splitText = append(splitText, text[i:])
 			} else {
-				j = j + (strings.Index(text[j:len(text)], " "))
+				j = j + (strings.Index(text[j:], " "))
 				splitText = append(splitText, text[i:j])
 			}
 			i = j
@@ -181,4 +194,34 @@ func main() {
 		fmt.Println("\nEnter p to play again or enter q to quit")
 		fmt.Scanln(&playAgain)
 	}
+
+}
+
+func run(filePath string) error {
+	f, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	d, err := mp3.NewDecoder(f)
+	if err != nil {
+		return err
+	}
+
+	c, err := oto.NewContext(d.SampleRate(), 2, 2, 8192)
+	if err != nil {
+		return err
+	}
+	defer c.Close()
+
+	p := c.NewPlayer()
+	defer p.Close()
+
+	fmt.Printf("Length: %d[bytes]\n", d.Length())
+
+	if _, err := io.Copy(p, d); err != nil {
+		return err
+	}
+	return nil
 }
