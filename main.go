@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 // main function
@@ -70,22 +72,42 @@ func main() {
 		colorReset()
 		fmt.Println("Please enter a topic for your madlib. Ex: penguins")
 
+		//fmt.Scanln(&searchTerm)
+		//to read in spaces as well
 		blue()
-		fmt.Scanln(&searchTerm)
+		in := bufio.NewReader(os.Stdin)
+		searchTerm, _ = in.ReadString('\n')
+		// trims off the newline character
+		searchTerm = strings.TrimSpace(searchTerm)
 
 		colorReset()
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
 		lyrics, news, wikipedia := Scrape(searchTerm)
 
+		options := make(map[string]texts)
+
+		options["lyrics"] = lyrics
+		options["news"] = news
+		options["wikipedia"] = wikipedia
+
+		for option := range options {
+			if options[option].err != nil {
+				delete(options, option)
+			}
+		}
+
 		var originalText string
 
-		if topic == "lyrics" {
-			originalText = lyrics.text
-		} else if topic == "news" {
-			originalText = news.text
-		} else if topic == "wikipedia" {
-			originalText = wikipedia.text
+		if _, ok := options[topic]; ok {
+			originalText = options[topic].text
+		} else {
+			fmt.Printf("There were no results for %s\n", topic)
+			for option := range options {
+				fmt.Printf("You can try '%s' for %s\n", option, option)
+			}
+			fmt.Scanln(&topic)
+			originalText = options[topic].text
 		}
 
 		text := originalText
@@ -129,32 +151,3 @@ func main() {
 	}
 
 }
-
-// func run(filePath string) error {
-// 	f, err := os.Open(filePath)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer f.Close()
-
-// 	d, err := mp3.NewDecoder(f)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	c, err := oto.NewContext(d.SampleRate(), 2, 2, 8192)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer c.Close()
-
-// 	p := c.NewPlayer()
-// 	defer p.Close()
-
-// 	fmt.Printf("Length: %d[bytes]\n", d.Length())
-
-// 	if _, err := io.Copy(p, d); err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
