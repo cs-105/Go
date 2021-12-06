@@ -21,7 +21,7 @@ func (text *texts) NewsRetriever(searchTerm string, wg *sync.WaitGroup) {
 
 	newsLinks, err := linkRetriever(searchTerm, newsLinks)
 
-	// a bunch of error catches making sure there are no errors in any of the steps
+	// error catches making sure there are no errors in any of the steps
 	// but we still return if there are
 
 	if err != nil {
