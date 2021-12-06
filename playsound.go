@@ -27,7 +27,6 @@ import (
 
 	"github.com/hajimehoshi/go-mp3"
 
-	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -118,7 +117,6 @@ func playSound(text string) {
 	}
 
 	for _, file := range files {
-		fmt.Println(file.Name())
 		if err := run("audio/" + file.Name()); err != nil {
 			log.Fatal(err)
 		}
