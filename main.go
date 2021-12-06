@@ -110,31 +110,6 @@ func main() {
 			originalText = options[topic].text
 		}
 
-		// if options[topic].err != nil {
-		// 	delete(options, topic)
-		// 	fmt.Printf("There were no results for %s topic.\n", topic)
-		// 	for option := range options {
-		// 		fmt.Printf("You can try %s\n", option)
-		// 	}
-		// } else {
-		// 	originalText = options[topic].text
-		// }
-
-		// var options [3]texts
-
-		// pos := 0
-		// if lyrics.err != nil {
-		// 	options[pos] = lyrics
-		// 	pos++
-		// }
-		// if news.err != nil {
-		// 	options[pos] = news
-		// 	pos++
-		// }
-		// if wikipedia.err != nil {
-		// 	options[pos] = wikipedia
-		// }
-
 		text := originalText
 
 		var holes []Hole = parseText(originalText)
