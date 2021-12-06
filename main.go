@@ -1,3 +1,7 @@
+/*
+ * Written by Ethan Banez, Michael Todd, Talia Bjelland, 2021
+ */
+
 package main
 
 import (
@@ -38,17 +42,14 @@ func main() {
 	var playAgain = "p"
 
 	for playAgain == "p" {
-		// Println function is used to
-		// display output in the next line
+
+		//get topic and term from user
 		colorReset()
 		fmt.Println("\nPlease select a source for your madlib: ")
 		fmt.Println("1 - lyrics \t 2 - news \t 3 - wikipedia")
-
-		// var then variable name then variable type
 		var topic string
 		var searchTerm string
 
-		// Taking input from user
 		blue()
 		fmt.Scanln(&topic)
 		for topic != "1" && topic != "2" && topic != "3" {
@@ -83,6 +84,7 @@ func main() {
 		colorReset()
 		fmt.Println("Great! Generating a madlib from " + topic + " about " + searchTerm + "...")
 
+		//notify user about success of search
 		lyrics, news, wikipedia := Scrape(searchTerm)
 
 		options := make(map[string]texts)
@@ -112,8 +114,10 @@ func main() {
 
 		text := originalText
 
+		//choose madlib holes from text
 		var holes []Hole = parseText(originalText)
 
+		//get user input for each hole
 		var newWords []string
 		for _, element := range holes {
 			colorReset()
@@ -124,13 +128,13 @@ func main() {
 			newWords = append(newWords, newWord)
 		}
 
+		//put user inputted words back in text
 		text = insertWords(newWords, holes, text)
 
 		colorReset()
 		fmt.Println("\n" + text)
 
-		//line 104
-
+		//play text to speech files
 		playSound(text)
 
 		colorReset()
