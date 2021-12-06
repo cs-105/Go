@@ -33,7 +33,7 @@ func (texts *texts) LyricRetriever(searchTerm string, wg *sync.WaitGroup) {
 
 		// collects only the first 8 lines
 		// rejoins it in it's original format
-		lines = lines[:8]
+		lines = lines[:16]
 		lyrics := strings.Join(lines, "\n")
 
 		texts.text = lyrics
