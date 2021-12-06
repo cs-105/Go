@@ -24,13 +24,11 @@ If you want your Mad Lib read out loud to you, you'll need to download the execu
 ### 3. Clone the repository
 Finally, if you want to build on top of this project, we recommend cloning the repository.
 #### Step 1: 
-Clone repository as https.
-#### Step 2: 
 In desired command line run 
 ```zsh
-git clone {cloned repo link}
+git clone https://github.com/cs-105/Go.git
 ```
-#### Step 3: 
+#### Step 2: 
 If you want don't want to build the executable just run:
 ```zsh
 go run .
