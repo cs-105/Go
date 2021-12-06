@@ -9,7 +9,7 @@ Go Tell it on the Mountain Mad Libs adds an exciting twist to the traditional Ma
 ## How can I play?
 
 ### 1. Online
-The easiest way to play is to play online at https://replit.com/@taliabjelland/Go-1#main.go
+The easiest way to play is to play online at https://replit.com/@taliabjelland/Go-2#main.go
    
    You will see the following screen, and all you have to do is click play! 
 ![image](https://user-images.githubusercontent.com/60273828/144920589-d5eb18d7-18c5-478e-a254-f19395e05b99.png)
